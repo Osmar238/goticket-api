@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 // Event schema -- Boluwatife Alewi
-// An event happens at a Venue, is run by a User (the organizer),
-// and Tickets point back at it.
+// Fields follow the project proposal: title, description, date, time,
+// venueId, price, category, status.
 const eventSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -15,8 +15,27 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Event description is required'],
     trim: true,
-    minlength: [10, 'Event description must be at least 10 characters'],
-    maxlength: [2000, 'Event description must be 2000 characters or fewer']
+    minlength: [10, 'Event description must be at least 10 characters']
+  },
+  date: {
+    type: Date,
+    required: [true, 'Event date is required']
+  },
+  time: {
+    type: String,
+    required: [true, 'Event time is required'],
+    // 24 hour clock, for example 19:30
+    match: [/^([01]\d|2[0-3]):[0-5]\d$/, 'Time must be in HH:MM 24 hour format, for example 19:30']
+  },
+  venueId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Venue',
+    required: [true, 'Venue id is required']
+  },
+  price: {
+    type: Number,
+    required: [true, 'Event price is required'],
+    min: [0, 'Event price cannot be negative']
   },
   category: {
     type: String,
@@ -26,60 +45,24 @@ const eventSchema = new mongoose.Schema({
       message: 'Category must be concert, conference, sports, theatre, festival, workshop or other'
     }
   },
-  venue: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Venue',
-    required: [true, 'Venue reference is required']
-  },
-  organizer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'Organizer reference is required']
-  },
-  startDate: {
-    type: Date,
-    required: [true, 'Start date is required']
-  },
-  endDate: {
-    type: Date,
-    required: [true, 'End date is required'],
-    validate: {
-      // `this` is only the document on a create, so guard for updates
-      validator: function (value) {
-        if (!this.startDate) return true;
-        return value > this.startDate;
-      },
-      message: 'End date must be after the start date'
-    }
-  },
-  totalCapacity: {
-    type: Number,
-    required: [true, 'Total capacity is required'],
-    min: [1, 'Total capacity must be at least 1']
-  },
   status: {
     type: String,
-    required: [true, 'Status is required'],
+    required: [true, 'Event status is required'],
     enum: {
       values: ['draft', 'published', 'cancelled', 'completed'],
       message: 'Status must be draft, published, cancelled or completed'
     },
     default: 'draft'
   },
-  imageUrl: {
-    type: String,
-    trim: true,
-    match: [/^https?:\/\/.+/, 'Image URL must start with http:// or https://'],
-    default: null
+  // Not in the proposal, but optional: who created the event
+  organizerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   isActive: {
     type: Boolean,
     default: true
   }
 }, { timestamps: true });
-
-// Events get listed by date constantly, so index the common lookups
-eventSchema.index({ startDate: 1 });
-eventSchema.index({ category: 1, status: 1 });
 
 module.exports = mongoose.model('Event', eventSchema);
