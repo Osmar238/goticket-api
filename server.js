@@ -1,9 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const connectDatabase = require('./data/database');
 
 dotenv.config();
 
@@ -12,21 +10,42 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/', require('./routes'));
 
-// MongoDB Conection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-    });
-  })
-  .catch((err) => {
-    console.error('Failed to connect to MongoDB', err);
-  });
-
-
-app.get('/', (req, res) => {
-  res.send('Welcome to GoTicket API');
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
 });
+
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  let statusCode = err.statusCode || 500;
+  if (err.name === 'ValidationError' || err.name === 'CastError') {
+    statusCode = 400;
+  } else if (err.code === 11000) {
+    statusCode = 409;
+  }
+
+  const message = statusCode === 500 ? 'Internal server error' : err.message;
+  return res.status(statusCode).json({ message });
+});
+
+async function startServer() {
+  await connectDatabase();
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
+
+if (require.main === module) {
+  startServer().catch((err) => {
+    console.error('Failed to start server', err);
+    process.exitCode = 1;
+  });
+}
+
+module.exports = app;
