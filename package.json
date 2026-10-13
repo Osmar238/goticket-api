@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "swagger": "node swagger.js",
-    "test": "cross-env NODE_ENV=test dotenv -e .env.test jest --detectOpenHandles"
+   "test": "cross-env NODE_ENV=test jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
