@@ -7,6 +7,14 @@ const doc = {
   },
   host: 'goticket-api-w7nh.onrender.com',
   schemes: ['https'],
+  securityDefinitions: {
+    githubOAuth: {
+      type: 'apiKey',
+      in: 'cookie',
+      name: 'connect.sid',
+      description: 'Log in by opening /login in a new browser tab. GitHub sends you back with a session cookie, and Swagger sends it automatically after that. Without it, POST, PUT and DELETE return 401.'
+    }
+  },
   '@definitions': {
     VenueCreate: {
       type: 'object',

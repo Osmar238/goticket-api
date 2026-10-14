@@ -41,6 +41,8 @@ const getSingle = async (req, res) => {
 
 const createTicket = async (req, res) => {
   //#swagger.tags = ['Tickets']
+  //#swagger.security = [{ "githubOAuth": [] }]
+  //#swagger.responses[401] = { description: 'Not logged in' }
   //#swagger.parameters['body'] = { in: 'body', description: 'Ticket document to create', required: true, schema: { $ref: '#/definitions/TicketCreate' } }
   const input = req.body || {};
   const ticket = {
@@ -75,6 +77,8 @@ const createTicket = async (req, res) => {
 
 const updateTicket = async (req, res) => {
   //#swagger.tags = ['Tickets']
+  //#swagger.security = [{ "githubOAuth": [] }]
+  //#swagger.responses[401] = { description: 'Not logged in' }
   //#swagger.parameters['body'] = { in: 'body', description: 'Ticket fields to update', required: true, schema: { $ref: '#/definitions/TicketUpdate' } }
   //#swagger.responses[204] = { description: 'No Content' }
   //#swagger.responses[400] = { description: 'Bad Request' }
@@ -122,6 +126,8 @@ const updateTicket = async (req, res) => {
 
 const deleteTicket = async (req, res) => {
   //#swagger.tags = ['Tickets']
+  //#swagger.security = [{ "githubOAuth": [] }]
+  //#swagger.responses[401] = { description: 'Not logged in' }
   try {
     if (!mongoose.isValidObjectId(req.params.id)) {
       return res.status(400).json({ message: 'Invalid ticket ID' });

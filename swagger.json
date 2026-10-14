@@ -10,6 +10,14 @@
   "schemes": [
     "https"
   ],
+  "securityDefinitions": {
+    "githubOAuth": {
+      "type": "apiKey",
+      "in": "cookie",
+      "name": "connect.sid",
+      "description": "Log in by opening /login in a new browser tab. GitHub sends you back with a session cookie, and Swagger sends it automatically after that. Without it, POST, PUT and DELETE return 401."
+    }
+  },
   "paths": {
     "/": {
       "get": {
@@ -27,6 +35,51 @@
         "responses": {
           "default": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Log in with GitHub",
+        "description": "Open this in a new browser tab, not with Try it out. It redirects to GitHub, then back here logged in.",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Show the logged in user",
+        "description": "Returns 401 when nobody is logged in.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Log out",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -75,13 +128,21 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Not logged in"
+          },
           "409": {
             "description": "Conflict"
           },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       }
     },
     "/venues/{id}": {
@@ -145,6 +206,9 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Not logged in"
+          },
           "404": {
             "description": "Not Found"
           },
@@ -154,7 +218,12 @@
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -176,13 +245,21 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Not logged in"
+          },
           "404": {
             "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       }
     },
     "/tickets/": {
@@ -229,10 +306,18 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Not logged in"
+          },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       }
     },
     "/tickets/{id}": {
@@ -296,13 +381,21 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Not logged in"
+          },
           "404": {
             "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -324,13 +417,21 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Not logged in"
+          },
           "404": {
             "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       }
     },
     "/users/": {
@@ -371,8 +472,16 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Not logged in"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       }
     },
     "/users/{id}": {
@@ -393,6 +502,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -431,10 +543,18 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Not logged in"
+          },
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -454,13 +574,24 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Not logged in"
+          },
           "404": {
             "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       }
     },
     "/events/": {
@@ -501,8 +632,16 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Not logged in"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       }
     },
     "/events/{id}": {
@@ -523,6 +662,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -561,10 +703,18 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Not logged in"
+          },
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -584,13 +734,24 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Not logged in"
+          },
           "404": {
             "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "githubOAuth": []
+          }
+        ]
       }
     }
   },
