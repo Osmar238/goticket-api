@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
+const { isAuthenticated } = require('../middleware/auth');
 
 const {
     getUsers,
@@ -59,8 +60,11 @@ router.get(
 router.post(
     '/',
     /* #swagger.tags = ['Users'] */
+    /* #swagger.security = [{ "githubOAuth": [] }] */
+    /* #swagger.responses[401] = { description: 'Not logged in' } */
     /* #swagger.summary = 'Create a user' */
     /* #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/UserCreate' } } */
+    isAuthenticated,
     validateUser,
     checkValidation,
     createUser
@@ -70,8 +74,11 @@ router.post(
 router.put(
     '/:id',
     /* #swagger.tags = ['Users'] */
+    /* #swagger.security = [{ "githubOAuth": [] }] */
+    /* #swagger.responses[401] = { description: 'Not logged in' } */
     /* #swagger.summary = 'Update a user' */
     /* #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/UserUpdate' } } */
+    isAuthenticated,
     validateUser,
     checkValidation,
     updateUser
@@ -81,7 +88,10 @@ router.put(
 router.delete(
     '/:id',
     /* #swagger.tags = ['Users'] */
+    /* #swagger.security = [{ "githubOAuth": [] }] */
+    /* #swagger.responses[401] = { description: 'Not logged in' } */
     /* #swagger.summary = 'Delete a user' */
+    isAuthenticated,
     deleteUser
 );
 

@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
+const { isAuthenticated } = require('../middleware/auth');
 
 const {
     getEvents,
@@ -59,8 +60,11 @@ router.get(
 router.post(
     '/',
     /* #swagger.tags = ['Events'] */
+    /* #swagger.security = [{ "githubOAuth": [] }] */
+    /* #swagger.responses[401] = { description: 'Not logged in' } */
     /* #swagger.summary = 'Create an event' */
     /* #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/EventCreate' } } */
+    isAuthenticated,
     validateEvent,
     checkValidation,
     createEvent
@@ -70,8 +74,11 @@ router.post(
 router.put(
     '/:id',
     /* #swagger.tags = ['Events'] */
+    /* #swagger.security = [{ "githubOAuth": [] }] */
+    /* #swagger.responses[401] = { description: 'Not logged in' } */
     /* #swagger.summary = 'Update an event' */
     /* #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/EventUpdate' } } */
+    isAuthenticated,
     validateEvent,
     checkValidation,
     updateEvent
@@ -81,7 +88,10 @@ router.put(
 router.delete(
     '/:id',
     /* #swagger.tags = ['Events'] */
+    /* #swagger.security = [{ "githubOAuth": [] }] */
+    /* #swagger.responses[401] = { description: 'Not logged in' } */
     /* #swagger.summary = 'Delete an event' */
+    isAuthenticated,
     deleteEvent
 );
 

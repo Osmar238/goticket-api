@@ -41,6 +41,8 @@ const getSingle = async (req, res) => {
 
 const createVenue = async (req, res) => {
   //#swagger.tags = ['Venues']
+  //#swagger.security = [{ "githubOAuth": [] }]
+  //#swagger.responses[401] = { description: 'Not logged in' }
   //#swagger.parameters['body'] = { in: 'body', description: 'Venue document to create', required: true, schema: { $ref: '#/definitions/VenueCreate' } }
   const input = req.body || {};
   const venue = {
@@ -76,6 +78,8 @@ const createVenue = async (req, res) => {
 
 const updateVenue = async (req, res) => {
   //#swagger.tags = ['Venues']
+  //#swagger.security = [{ "githubOAuth": [] }]
+  //#swagger.responses[401] = { description: 'Not logged in' }
   //#swagger.parameters['body'] = { in: 'body', description: 'Venue fields to update', required: true, schema: { $ref: '#/definitions/VenueUpdate' } }
   //#swagger.responses[204] = { description: 'No Content' }
   //#swagger.responses[400] = { description: 'Bad Request' }
@@ -124,6 +128,8 @@ const updateVenue = async (req, res) => {
 
 const deleteVenue = async (req, res) => {
   //#swagger.tags = ['Venues']
+  //#swagger.security = [{ "githubOAuth": [] }]
+  //#swagger.responses[401] = { description: 'Not logged in' }
   try {
     if (!mongoose.isValidObjectId(req.params.id)) {
       return res.status(400).json({ message: 'Invalid venue ID' });
