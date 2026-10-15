@@ -769,7 +769,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "example": "Downtown Concert Hall"
+          "example": "Lagos Arena"
         },
         "description": {
           "type": "string",
@@ -865,12 +865,12 @@
         "userId": {
           "type": "string",
           "pattern": "^[0-9a-fA-F]{24}$",
-          "example": "507f1f77bcf86cd799439011"
+          "example": "6ac87e1bc9b31f712fd24145"
         },
         "eventId": {
           "type": "string",
           "pattern": "^[0-9a-fA-F]{24}$",
-          "example": "507f1f77bcf86cd799439012"
+          "example": "6ac87e1cc9b31f712fd2414a"
         },
         "name": {
           "type": "string",
@@ -917,83 +917,30 @@
       "properties": {
         "name": {
           "type": "string",
-          "example": "Downtown Concert Hall"
+          "example": "Lagos Arena"
         },
         "description": {
           "type": "string",
-          "example": "A live music venue in downtown."
+          "example": "An indoor arena for concerts and sports, now expanded."
         },
         "capacity": {
           "type": "number",
           "minimum": 0,
-          "example": 1200
-        },
-        "address": {
-          "type": "object",
-          "required": [
-            "street",
-            "city",
-            "state",
-            "zipCode",
-            "country"
-          ],
-          "properties": {
-            "street": {
-              "type": "string",
-              "example": "123 Main Street"
-            },
-            "city": {
-              "type": "string",
-              "example": "Provo"
-            },
-            "state": {
-              "type": "string",
-              "example": "UT"
-            },
-            "zipCode": {
-              "type": "string",
-              "example": "84601"
-            },
-            "country": {
-              "type": "string",
-              "example": "United States"
-            }
-          }
-        },
-        "location": {
-          "type": "object",
-          "required": [
-            "coordinates"
-          ],
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": [
-                "Point"
-              ],
-              "default": "Point"
-            },
-            "coordinates": {
-              "type": "array",
-              "items": {
-                "type": "number"
-              },
-              "example": [
-                -111.6585,
-                40.2338
-              ]
-            }
-          }
+          "example": 6500
         },
         "contactEmail": {
           "type": "string",
           "format": "email",
-          "example": "info@example.com"
+          "example": "bookings@lagosarena.com"
         },
         "isActive": {
           "type": "boolean",
           "default": true
         }
+      },
+      "example": {
+        "description": "An indoor arena for concerts and sports, now expanded.",
+        "capacity": 6500
       }
     },
     "TicketUpdate": {
@@ -1002,12 +949,12 @@
         "userId": {
           "type": "string",
           "pattern": "^[0-9a-fA-F]{24}$",
-          "example": "507f1f77bcf86cd799439011"
+          "example": "6ac87e1bc9b31f712fd24145"
         },
         "eventId": {
           "type": "string",
           "pattern": "^[0-9a-fA-F]{24}$",
-          "example": "507f1f77bcf86cd799439012"
+          "example": "6ac87e1cc9b31f712fd2414a"
         },
         "name": {
           "type": "string",
@@ -1047,6 +994,10 @@
           "type": "boolean",
           "default": true
         }
+      },
+      "example": {
+        "price": 50,
+        "quantity": 100
       }
     },
     "UserCreate": {
@@ -1082,16 +1033,6 @@
           "type": "string",
           "example": "+256700000000"
         },
-        "oauthProvider": {
-          "type": "string",
-          "enum": [
-            "google",
-            "github"
-          ]
-        },
-        "oauthId": {
-          "type": "string"
-        },
         "isActive": {
           "type": "boolean",
           "default": true
@@ -1119,23 +1060,16 @@
           "enum": [
             "attendee",
             "admin"
-          ]
+          ],
+          "example": "admin"
         },
         "phone": {
-          "type": "string"
-        },
-        "oauthProvider": {
           "type": "string",
-          "enum": [
-            "google",
-            "github"
-          ]
-        },
-        "oauthId": {
-          "type": "string"
+          "example": "+256700000000"
         },
         "isActive": {
-          "type": "boolean"
+          "type": "boolean",
+          "example": true
         }
       }
     },
@@ -1170,7 +1104,7 @@
         },
         "venueId": {
           "type": "string",
-          "example": "507f1f77bcf86cd799439011"
+          "example": "6ac87e1bc9b31f712fd24147"
         },
         "price": {
           "type": "number",
@@ -1200,7 +1134,8 @@
           "default": "draft"
         },
         "organizerId": {
-          "type": "string"
+          "type": "string",
+          "example": "6ac87e1bc9b31f712fd24145"
         },
         "isActive": {
           "type": "boolean",
@@ -1210,27 +1145,37 @@
     },
     "EventUpdate": {
       "type": "object",
+      "required": [
+        "title",
+        "date",
+        "venueId"
+      ],
       "properties": {
         "title": {
-          "type": "string"
+          "type": "string",
+          "example": "Summer Music Festival"
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "example": "A live music festival featuring local artists, now with a late show."
         },
         "date": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "example": "2026-11-15T00:00:00.000Z"
         },
         "time": {
           "type": "string",
-          "example": "19:30"
+          "example": "21:00"
         },
         "venueId": {
-          "type": "string"
+          "type": "string",
+          "example": "6ac87e1bc9b31f712fd24147"
         },
         "price": {
           "type": "number",
-          "minimum": 0
+          "minimum": 0,
+          "example": 40
         },
         "category": {
           "type": "string",
@@ -1242,7 +1187,8 @@
             "festival",
             "workshop",
             "other"
-          ]
+          ],
+          "example": "concert"
         },
         "status": {
           "type": "string",
@@ -1251,13 +1197,16 @@
             "published",
             "cancelled",
             "completed"
-          ]
+          ],
+          "example": "published"
         },
         "organizerId": {
-          "type": "string"
+          "type": "string",
+          "example": "6ac87e1bc9b31f712fd24145"
         },
         "isActive": {
-          "type": "boolean"
+          "type": "boolean",
+          "example": true
         }
       }
     }

@@ -20,7 +20,8 @@ const doc = {
       type: 'object',
       required: ['name', 'description', 'capacity', 'address', 'location', 'contactEmail'],
       properties: {
-        name: { type: 'string', example: 'Downtown Concert Hall' },
+        // Venue names are unique, so this must not match a venue already in the database
+        name: { type: 'string', example: 'Lagos Arena' },
         description: { type: 'string', example: 'A live music venue in downtown.' },
         capacity: { type: 'number', minimum: 0, example: 1200 },
         address: {
@@ -54,8 +55,8 @@ const doc = {
       type: 'object',
       required: ['userId', 'eventId', 'name', 'price', 'quantity', 'currency', 'salesStartDate', 'salesEndDate', 'maxTicketsPerCustomer'],
       properties: {
-        userId: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '507f1f77bcf86cd799439011' },
-        eventId: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '507f1f77bcf86cd799439012' },
+        userId: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '6ac87e1bc9b31f712fd24145' },
+        eventId: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '6ac87e1cc9b31f712fd2414a' },
         name: { type: 'string', example: 'General Admission' },
         price: { type: 'number', minimum: 0, example: 35 },
         quantity: { type: 'number', minimum: 0, example: 2 },
@@ -68,42 +69,25 @@ const doc = {
     },
     VenueUpdate: {
       type: 'object',
+      // Only send the fields you want to change. name is left out of the example
+      // because venue names are unique and a copied name would clash.
       properties: {
-        name: { type: 'string', example: 'Downtown Concert Hall' },
-        description: { type: 'string', example: 'A live music venue in downtown.' },
-        capacity: { type: 'number', minimum: 0, example: 1200 },
-        address: {
-          type: 'object',
-          required: ['street', 'city', 'state', 'zipCode', 'country'],
-          properties: {
-            street: { type: 'string', example: '123 Main Street' },
-            city: { type: 'string', example: 'Provo' },
-            state: { type: 'string', example: 'UT' },
-            zipCode: { type: 'string', example: '84601' },
-            country: { type: 'string', example: 'United States' }
-          }
-        },
-        location: {
-          type: 'object',
-          required: ['coordinates'],
-          properties: {
-            type: { type: 'string', enum: ['Point'], default: 'Point' },
-            coordinates: {
-              type: 'array',
-              items: { type: 'number' },
-              example: [-111.6585, 40.2338]
-            }
-          }
-        },
-        contactEmail: { type: 'string', format: 'email', example: 'info@example.com' },
+        name: { type: 'string', example: 'Lagos Arena' },
+        description: { type: 'string', example: 'An indoor arena for concerts and sports, now expanded.' },
+        capacity: { type: 'number', minimum: 0, example: 6500 },
+        contactEmail: { type: 'string', format: 'email', example: 'bookings@lagosarena.com' },
         isActive: { type: 'boolean', default: true }
+      },
+      example: {
+        description: 'An indoor arena for concerts and sports, now expanded.',
+        capacity: 6500
       }
     },
     TicketUpdate: {
       type: 'object',
       properties: {
-        userId: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '507f1f77bcf86cd799439011' },
-        eventId: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '507f1f77bcf86cd799439012' },
+        userId: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '6ac87e1bc9b31f712fd24145' },
+        eventId: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '6ac87e1cc9b31f712fd2414a' },
         name: { type: 'string', example: 'General Admission' },
         price: { type: 'number', minimum: 0, example: 35 },
         quantity: { type: 'number', minimum: 0, example: 2 },
@@ -112,6 +96,10 @@ const doc = {
         salesEndDate: { type: 'string', format: 'date-time', example: '2026-11-01T00:00:00.000Z' },
         maxTicketsPerCustomer: { type: 'number', minimum: 1, example: 4 },
         isActive: { type: 'boolean', default: true }
+      },
+      example: {
+        price: 50,
+        quantity: 100
       }
     },
     UserCreate: {
@@ -123,8 +111,6 @@ const doc = {
         email: { type: 'string', format: 'email', example: 'solomon@example.com' },
         role: { type: 'string', enum: ['attendee', 'admin'], example: 'attendee' },
         phone: { type: 'string', example: '+256700000000' },
-        oauthProvider: { type: 'string', enum: ['google', 'github'] },
-        oauthId: { type: 'string' },
         isActive: { type: 'boolean', default: true }
       }
     },
@@ -134,11 +120,9 @@ const doc = {
         firstName: { type: 'string', example: 'Solomon' },
         lastName: { type: 'string', example: 'Kusasira' },
         email: { type: 'string', format: 'email', example: 'solomon@example.com' },
-        role: { type: 'string', enum: ['attendee', 'admin'] },
-        phone: { type: 'string' },
-        oauthProvider: { type: 'string', enum: ['google', 'github'] },
-        oauthId: { type: 'string' },
-        isActive: { type: 'boolean' }
+        role: { type: 'string', enum: ['attendee', 'admin'], example: 'admin' },
+        phone: { type: 'string', example: '+256700000000' },
+        isActive: { type: 'boolean', example: true }
       }
     },
     EventCreate: {
@@ -149,7 +133,7 @@ const doc = {
         description: { type: 'string', example: 'A live music festival featuring local artists.' },
         date: { type: 'string', format: 'date-time', example: '2026-11-15T00:00:00.000Z' },
         time: { type: 'string', example: '19:30' },
-        venueId: { type: 'string', example: '507f1f77bcf86cd799439011' },
+        venueId: { type: 'string', example: '6ac87e1bc9b31f712fd24147' },
         price: { type: 'number', minimum: 0, example: 25 },
         category: {
           type: 'string',
@@ -160,29 +144,33 @@ const doc = {
           enum: ['draft', 'published', 'cancelled', 'completed'],
           default: 'draft'
         },
-        organizerId: { type: 'string' },
+        organizerId: { type: 'string', example: '6ac87e1bc9b31f712fd24145' },
         isActive: { type: 'boolean', default: true }
       }
     },
     EventUpdate: {
       type: 'object',
+      // The PUT route checks title, date and venueId, so the example sends them
+      required: ['title', 'date', 'venueId'],
       properties: {
-        title: { type: 'string' },
-        description: { type: 'string' },
-        date: { type: 'string', format: 'date-time' },
-        time: { type: 'string', example: '19:30' },
-        venueId: { type: 'string' },
-        price: { type: 'number', minimum: 0 },
+        title: { type: 'string', example: 'Summer Music Festival' },
+        description: { type: 'string', example: 'A live music festival featuring local artists, now with a late show.' },
+        date: { type: 'string', format: 'date-time', example: '2026-11-15T00:00:00.000Z' },
+        time: { type: 'string', example: '21:00' },
+        venueId: { type: 'string', example: '6ac87e1bc9b31f712fd24147' },
+        price: { type: 'number', minimum: 0, example: 40 },
         category: {
           type: 'string',
-          enum: ['concert', 'conference', 'sports', 'theatre', 'festival', 'workshop', 'other']
+          enum: ['concert', 'conference', 'sports', 'theatre', 'festival', 'workshop', 'other'],
+          example: 'concert'
         },
         status: {
           type: 'string',
-          enum: ['draft', 'published', 'cancelled', 'completed']
+          enum: ['draft', 'published', 'cancelled', 'completed'],
+          example: 'published'
         },
-        organizerId: { type: 'string' },
-        isActive: { type: 'boolean' }
+        organizerId: { type: 'string', example: '6ac87e1bc9b31f712fd24145' },
+        isActive: { type: 'boolean', example: true }
       }
     }
   }
